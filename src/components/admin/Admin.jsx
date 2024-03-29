@@ -40,7 +40,8 @@ function Admin() {
 				name: '',
 				desc: '',
 				price: '',
-				image: '',
+				// Use the uploaded file
+				image: inputValues.image,
 			})
 
 			document.getElementById('modal').close()
@@ -50,12 +51,31 @@ function Admin() {
 			await setDoc(itemRef, inputValues, { merge: true })
 		}
 	}
+
+	// Function to handle file upload
+	const handleFileUpload = e => {
+		const file = e.target.files[0]
+		const reader = new FileReader()
+
+		reader.onloadend = () => {
+			setInputValues(prev => ({
+				...prev,
+				image: reader.result,
+			}))
+		}
+
+		if (file) {
+			reader.readAsDataURL(file)
+		}
+	}
+
 	return (
 		<div className='font-Poppins'>
 			{isLogged ? (
 				<div className='flex justify-start flex-col md:flex-row items-start'>
 					<div className='w-full md:w-[360px] bg-[#FFFFFF] md:h-screen flex flex-col items-center md:pb-0 pb-[20px] pt-5 shadow-admin'>
 						<Link to='/'>
+							{/* Use the logo */}
 							<img src={logo} alt='logo' className='w-10' />
 						</Link>
 						<div className='mt-[35px] flex flex-col items-start gap-3 w-full px-6'>
@@ -180,16 +200,31 @@ function Admin() {
 							placeholder='Narx'
 							className='input input-bordered'
 						/>
-						<input
-							onChange={e =>
-								setInputValues(prev => ({ ...prev, image: e.target.value }))
-							}
-							value={inputValues.image || ''}
-							type='text'
-							placeholder='Картинка URL'
-							className='input input-bordered'
-						/>
-
+						{/* Use type file for image upload */}
+						<div className='relative border border-gray-300 bg-white rounded-md shadow-sm py-2 px-4 flex justify-between items-center'>
+							<input
+								onChange={handleFileUpload}
+								type='file'
+								className='absolute inset-0 opacity-0 w-full h-full cursor-pointer'
+							/>
+							<span className='mr-2'>
+								{inputValues.image ? 'File selected' : 'Choose a file'}
+							</span>
+							<svg
+								xmlns='http://www.w3.org/2000/svg'
+								className='h-6 w-6 text-gray-500'
+								fill='none'
+								viewBox='0 0 24 24'
+								stroke='currentColor'
+							>
+								<path
+									strokeLinecap='round'
+									strokeLinejoin='round'
+									strokeWidth='2'
+									d='M12 4v16m8-8H4'
+								/>
+							</svg>
+						</div>
 						<button
 							onClick={() => addItem('products')}
 							className='mt-[10px] btn bg-[#458FF6] hover:bg-[#3166AF] text-[#fff]'
