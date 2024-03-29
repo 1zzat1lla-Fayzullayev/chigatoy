@@ -40,7 +40,6 @@ function Admin() {
 				name: '',
 				desc: '',
 				price: '',
-				// Use the uploaded file
 				image: inputValues.image,
 			})
 
