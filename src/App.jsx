@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Products from './components/Products'
@@ -6,6 +6,11 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom' // Imp
 import Admin from './components/admin/Admin'
 
 function App() {
+	const [bag, setBag] = useState([])
+
+	const addToBag = product => {
+		setBag([...bag, product])
+	}
 	return (
 		<Router>
 			{' '}
@@ -16,8 +21,8 @@ function App() {
 						path='/'
 						element={
 							<div>
-								<Navbar />
-								<Products />
+								<Navbar bag={bag} />
+								<Products addToBag={addToBag} />
 								{/* <Hero /> */}
 							</div>
 						}

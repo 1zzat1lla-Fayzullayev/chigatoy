@@ -1,9 +1,9 @@
 import React from 'react'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import { app, db } from '../firebase/firebaseConfig'
+import { app } from '../firebase/firebaseConfig'
 import { collection, getFirestore } from 'firebase/firestore'
 
-function Products() {
+function Products({ addToBag }) {
 	const [products] = useCollection(collection(getFirestore(app), 'products'), {
 		snapshotListenOptions: { includeMetadataChanges: true },
 	})
@@ -18,7 +18,7 @@ function Products() {
 					products.docs.map(product => (
 						<div
 							key={product.id}
-							className='card card-compact m-4 bg-base-100 shadow-xl rounded-[20px]'
+							className='card card-compact m-4 bg-base-100 shadow-xl rounded-[10px]'
 							style={{ maxWidth: '300px' }}
 						>
 							<figure>
@@ -30,10 +30,22 @@ function Products() {
 								/>
 							</figure>
 							<div className='card-body'>
-								<h2 className='card-title'>{product.data().name}</h2>
-								<p>{product.data().desc}</p>
-								<div className='card-actions justify-end'>
-									<button className='btn btn-primary'>Harid qilish</button>
+								<h2 className='card-title text-[30px] my-[5px]'>
+									{product.data().name}
+								</h2>
+								<p className='text-[gray] text-[17px]'>
+									{product?.data().desc}
+								</p>
+								<p className='text-[19px] text-green-600 font-bold'>
+									{product.data().price} so'm
+								</p>
+								<div className='w-full'>
+									<button
+										className='btn btn-primary w-full mt-[20px]'
+										onClick={() => addToBag(product.data())}
+									>
+										Savatga qo'shish
+									</button>
 								</div>
 							</div>
 						</div>

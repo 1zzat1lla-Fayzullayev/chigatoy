@@ -8,11 +8,12 @@ import {
 	doc,
 	setDoc,
 } from 'firebase/firestore'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../assets/chigatoy.jpg'
 
 function Admin() {
 	const [tab, setTab] = useState(1)
+	const navigate = useNavigate()
 	const [isLogged, setLogged] = useState(
 		localStorage.getItem('isLoggedIn') === 'true'
 	)
@@ -68,6 +69,11 @@ function Admin() {
 		}
 	}
 
+	const handleLogOut = () => {
+		localStorage.removeItem('isLoggedIn')
+		navigate('/')
+	}
+
 	return (
 		<div className='font-Poppins'>
 			{isLogged ? (
@@ -93,16 +99,26 @@ function Admin() {
 					<div className='p-5 bg-[#FAFBFF] w-full md:w-11/12'>
 						{tab === 1 && (
 							<div className='overflow-x-auto h-screen'>
-								<div className='flex justify-between items-center my-3'>
+								<div className='flex justify-between items-center my-3 flex-col md:flex-row '>
 									<h1 className='text-2xl font-[800] text-[#5c5c5c]'>
 										Taomlar
 									</h1>
-									<button
-										onClick={() => document.getElementById('modal').showModal()}
-										className='btn bg-[#458FF6] hover:bg-[#3166AF] text-[#fff]'
-									>
-										Taom qo'shish
-									</button>
+									<div className='flex gap-2 mt-[15px] md:mt-0'>
+										<button
+											className='btn bg-red-500 hover:bg-red-700 text-[#fff]'
+											onClick={handleLogOut}
+										>
+											Chiqish
+										</button>
+										<button
+											onClick={() =>
+												document.getElementById('modal').showModal()
+											}
+											className='btn bg-[#458FF6] hover:bg-[#3166AF] text-[#fff]'
+										>
+											Taom qo'shish
+										</button>
+									</div>
 								</div>
 								<table className='shadow-admin2 table my-20 bg-[#FFFFFF] w-11/12 mx-auto'>
 									<thead className='2xl:table hidden md:block w-full'>
@@ -141,7 +157,7 @@ function Admin() {
 												</td>
 												<td
 													onClick={() => deleteItem('products', item.id)}
-													className='w-1/12 cursor-pointer block hover:scale-105 transition-all text-red-500 text-center  '
+													className='w-1/12 cursor-pointer block  text-red-500 text-center  '
 												>
 													O'chirish
 												</td>
