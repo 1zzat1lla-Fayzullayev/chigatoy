@@ -4,12 +4,31 @@ import { app } from '../firebase/firebaseConfig'
 import { collection, getFirestore } from 'firebase/firestore'
 
 function Products({ addToBag }) {
-	const [products] = useCollection(collection(getFirestore(app), 'products'), {
-		snapshotListenOptions: { includeMetadataChanges: true },
-	})
+	const [products, loading, error] = useCollection(
+		collection(getFirestore(app), 'products'),
+		{
+			snapshotListenOptions: { includeMetadataChanges: true },
+		}
+	)
+
+	const handleAddToBag = product => {
+		addToBag(product)
+	}
+
+	if (loading) {
+		return (
+			<div className='flex justify-center items-center min-h-[100vh] overflow-y-hidden'>
+				<span className='loading loading-ring loading-lg text-red-500'></span>
+			</div>
+		)
+	}
+
+	if (error) {
+		return <div>Error: {error.message}</div>
+	}
 
 	return (
-		<div className='flex justify-center items-center flex-col font-Poppins'>
+		<div className='flex justify-center items-center flex-col font-Poppins pt-[100px]'>
 			<h1 className='text-[25px] md:text-[40px] font-semibold my-[20px]'>
 				Taomlar
 			</h1>
@@ -33,16 +52,16 @@ function Products({ addToBag }) {
 								<h2 className='card-title text-[30px] my-[5px]'>
 									{product.data().name}
 								</h2>
-								<p className='text-[gray] text-[17px]'>
+								{/* <p className='text-[gray] text-[17px]'>
 									{product?.data().desc}
-								</p>
+								</p> */}
 								<p className='text-[19px] text-green-600 font-bold'>
 									{product.data().price} so'm
 								</p>
 								<div className='w-full'>
 									<button
 										className='btn btn-primary w-full mt-[20px]'
-										onClick={() => addToBag(product.data())}
+										onClick={() => handleAddToBag(product.data())}
 									>
 										Savatga qo'shish
 									</button>
