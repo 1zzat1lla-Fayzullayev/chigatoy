@@ -2,6 +2,7 @@ import React from 'react'
 import Header from '../components/Header'
 import Main from '../components/Main'
 import MarqueeFood from '../components/MarqueeFood'
+import Salats from '../components/Salats'
 
 function Outlet() {
 	return (
@@ -11,6 +12,7 @@ function Outlet() {
 				<Header />
 				<Main />
 				<MarqueeFood />
+				<Salats />
 			</div>
 		</>
 	)
