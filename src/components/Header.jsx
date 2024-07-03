@@ -46,7 +46,7 @@ function Header() {
 			</header>
 
 			{showMobileHeader && <MobileHeader openNavbar={handleOpenNavbar} />}
-			<Menu showMenu={showMenu} openMenu={handleShowMenu} />
+			<Menu showMenu={showMenu} openMenu={handleShowMenu} setShowMenu={setShowMenu}/>
 		</>
 	)
 }
