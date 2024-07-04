@@ -1,8 +1,11 @@
 import React from 'react'
+import FirstFoods from '../components/foods/FirstFoods'
+import Salats from '../components/foods/Salats'
+import SecondFoods from '../components/foods/SecondFoods'
 import Header from '../components/Header'
 import Main from '../components/Main'
 import MarqueeFood from '../components/MarqueeFood'
-import Salats from '../components/Salats'
+import Shashlik from '../components/foods/Shashlik'
 
 function Outlet() {
 	return (
@@ -13,6 +16,9 @@ function Outlet() {
 				<Main />
 				<MarqueeFood />
 				<Salats />
+				<FirstFoods />
+				<SecondFoods />
+				<Shashlik />	
 			</div>
 		</>
 	)
