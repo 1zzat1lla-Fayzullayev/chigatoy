@@ -120,11 +120,11 @@ function Salats({
 						</SwiperSlide>
 					))}
 					<div
-						className='swiper-button-next text-white bg-[#8c000e8e] rounded-full flex items-center justify-center p-6'
+						className='swiper-button-next text-white bg-[#8c000e8e] rounded-full flex items-center justify-center p-8'
 						onClick={() => swiperRef.current.slideNext()}
 					></div>
 					<div
-						className='swiper-button-prev text-white bg-[#8c000e8e] rounded-full flex items-center justify-center p-6'
+						className='swiper-button-prev text-white bg-[#8c000e8e] rounded-full flex items-center justify-center p-8'
 						onClick={() => swiperRef.current.slidePrev()}
 					></div>
 				</Swiper>
