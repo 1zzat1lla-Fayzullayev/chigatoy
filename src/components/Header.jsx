@@ -26,12 +26,17 @@ function Header({ selectedCard, menuItems }) {
 						<Logo />
 						<List />
 						<div className='flex items-center gap-[20px]'>
-							<img
-								src={images.shoppingBag}
-								alt='shopping-bag'
-								className='w-[30px] cursor-pointer'
-								onClick={handleShowMenu}
-							/>
+							<div className='relative'>
+								<img
+									src={images.shoppingBag}
+									alt='shopping-bag'
+									className='w-[30px] cursor-pointer'
+									onClick={handleShowMenu}
+								/>
+								<div className='absolute top-[-5px] right-[-5px] w-[15px] h-[15px] rounded-full bg-[#0080004a] text-center flex justify-center items-center font-bold text-[#8C000E] text-[11px]'>
+									{menuItems.length}
+								</div>
+							</div>
 							<div
 								className='flex flex-col items-center gap-[7px] cursor-pointer sm:hidden mt-[3px]'
 								onClick={handleOpenNavbar}

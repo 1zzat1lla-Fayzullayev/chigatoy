@@ -20,10 +20,19 @@ function Outlet() {
 		}
 	}
 
+	const handleClear = () => {
+		localStorage.removeItem('menuItems')
+		setMenuItems([])
+	}
+
 	useEffect(() => {
 		const savedCard = localStorage.getItem('selectedCard')
+		const savedItems = localStorage.getItem('menuItems')
 		if (savedCard) {
 			setSelectedCard(JSON.parse(savedCard))
+		}
+		if (savedItems) {
+			setMenuItems(JSON.parse(savedItems))
 		}
 	}, [])
 
@@ -34,6 +43,10 @@ function Outlet() {
 			localStorage.removeItem('selectedCard')
 		}
 	}, [selectedCard])
+
+	useEffect(() => {
+		localStorage.setItem('menuItems', JSON.stringify(menuItems))
+	}, [menuItems])
 
 	const handleIncrement = () => {
 		setQuantity(prevQuantity => prevQuantity + 1)
@@ -92,7 +105,6 @@ function Outlet() {
 				setQuantity={setQuantity}
 				quantity={quantity}
 			/>
-
 			<Shashlik
 				setSelectedCard={setSelectedCard}
 				selectedCard={selectedCard}
@@ -103,7 +115,6 @@ function Outlet() {
 				setQuantity={setQuantity}
 				quantity={quantity}
 			/>
-
 			{showMenu && (
 				<Menu
 					showMenu={showMenu}
@@ -111,10 +122,10 @@ function Outlet() {
 					setShowMenu={setShowMenu}
 					selectedCard={selectedCard}
 					menuItems={menuItems}
-					selectedOption={selectedOption}
 					calculateTotalPrice={calculateTotalPrice}
 					handleIncrement={handleIncrement}
 					handleDecrement={handleDecrement}
+					handleClear={handleClear}
 				/>
 			)}
 		</div>

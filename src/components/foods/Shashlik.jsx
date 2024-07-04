@@ -90,15 +90,13 @@ function Shashlik({
 				>
 					{shashlik.map((card, index) => (
 						<SwiperSlide key={index}>
-							<div
-								className='relative h-[280px] w-[250px] mx-auto rounded-lg border border-gray-200 overflow-hidden'
-								onClick={() => handleCardClick(card)}
-							>
+							<div className='relative h-[280px] w-[250px] mx-auto rounded-lg border border-gray-200 overflow-hidden'>
 								<motion.img
 									whileHover={{ scale: 1.07 }}
 									src={card.cardpicture}
 									alt={card.cardname}
 									className='w-full h-[60%] object-cover rounded-t-lg cursor-pointer'
+									onClick={() => handleCardClick(card)}
 								/>
 								<div className='p-6'>
 									<h3 className='text-[17px] font-semibold mb-2'>
