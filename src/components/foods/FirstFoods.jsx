@@ -8,7 +8,9 @@ import Wrapper from '../../layout/Wrapper'
 import supabase from '../../supabase/config'
 
 function FirstFoods() {
-	const [firstfood, setFirstFood] = useState([])
+	const [firstfood, setFirstFoods] = useState([])
+	const [selectedCard, setSelectedCard] = useState(null)
+	const [quantity, setQuantity] = useState(1)
 	const swiperRef = useRef(null)
 
 	const fetchFirstFoods = async () => {
@@ -17,7 +19,7 @@ function FirstFoods() {
 			if (error) {
 				throw error
 			} else {
-				setFirstFood(data)
+				setFirstFoods(data)
 			}
 		} catch (error) {
 			console.error('Error fetching data:', error.message)
@@ -27,6 +29,33 @@ function FirstFoods() {
 	useEffect(() => {
 		fetchFirstFoods()
 	}, [])
+
+	const handleCardClick = card => {
+		setSelectedCard(card)
+		setQuantity(1)
+		const modal = document.getElementById('firstfood-modal')
+		if (modal) modal.showModal()
+	}
+
+	const handleCloseModal = () => {
+		const modal = document.getElementById('firstfood-modal')
+		if (modal) modal.close()
+		setSelectedCard(null)
+	}
+
+	const handleIncrement = () => {
+		setQuantity(prevQuantity => prevQuantity + 1)
+	}
+
+	const handleDecrement = () => {
+		if (quantity > 1) {
+			setQuantity(prevQuantity => prevQuantity - 1)
+		}
+	}
+
+	const calculateTotalPrice = () => {
+		return selectedCard ? selectedCard.cardprice * quantity : 0
+	}
 
 	return (
 		<Wrapper>
@@ -69,7 +98,10 @@ function FirstFoods() {
 				>
 					{firstfood.map((card, index) => (
 						<SwiperSlide key={index}>
-							<div className='relative h-[280px] w-[250px] mx-auto rounded-lg border border-gray-200 overflow-hidden'>
+							<div
+								className='relative h-[280px] w-[250px] mx-auto rounded-lg border border-gray-200 overflow-hidden'
+								onClick={() => handleCardClick(card)}
+							>
 								<motion.img
 									whileHover={{ scale: 1.07 }}
 									src={card.cardpicture}
@@ -77,7 +109,7 @@ function FirstFoods() {
 									className='w-full h-[60%] object-cover rounded-t-lg cursor-pointer'
 								/>
 								<div className='p-6'>
-									<h3 className='text-lg font-semibold mb-2'>
+									<h3 className='text-[17px] font-semibold mb-2'>
 										{card.cardname}
 									</h3>
 									<div className='flex items-center justify-between mt-4'>
@@ -104,6 +136,48 @@ function FirstFoods() {
 					></div>
 				</Swiper>
 			</div>
+
+			<dialog id='firstfood-modal' className='modal font-Poppins'>
+				<div className='modal-box glass-effect'>
+					<img
+						src={images.close}
+						alt='close'
+						className='w-[30px] absolute right-0 top-0 cursor-pointer'
+						onClick={handleCloseModal}
+					/>
+
+					{selectedCard && (
+						<>
+							<img
+								src={selectedCard.cardpicture}
+								alt={selectedCard.cardname}
+								className='w-full h-[200px] object-cover rounded-t-lg'
+							/>
+							<h4 className='text-lg font-semibold mt-4'>
+								{selectedCard.cardname}
+							</h4>
+							<p className='text-sm mt-2'>{selectedCard.carddescreption}</p>
+							<p className='text-lg font-bold text-red-500 mt-4'>
+								{calculateTotalPrice()} so'm
+							</p>
+							<div className='flex items-center gap-[10px]'>
+								<button className='text-[35px]' onClick={handleDecrement}>
+									-
+								</button>
+								<span className='text-[35px]'>{quantity}</span>
+								<button className='text-[35px]' onClick={handleIncrement}>
+									+
+								</button>
+								<img
+									src={images.shoppingBag}
+									alt='bag'
+									className='w-[30px] cursor-pointer ml-[50px]'
+								/>
+							</div>
+						</>
+					)}
+				</div>
+			</dialog>
 		</Wrapper>
 	)
 }
