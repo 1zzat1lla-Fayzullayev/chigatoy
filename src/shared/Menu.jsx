@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { motion } from 'framer-motion'
 import images from '../ImportedPictures'
 
 function Menu({
 	showMenu,
-	openMenu,
 	setShowMenu,
 	selectedCard,
 	menuItems,
@@ -14,6 +13,14 @@ function Menu({
 	const handleCloseMenu = () => {
 		setShowMenu(false)
 	}
+
+	// Ensure scrolling to the bottom when a new item is added
+	useEffect(() => {
+		const menuContainer = document.getElementById('menuContainer')
+		if (menuContainer) {
+			menuContainer.scrollTop = menuContainer.scrollHeight
+		}
+	}, [menuItems])
 
 	return (
 		<motion.div
@@ -31,30 +38,22 @@ function Menu({
 				/>
 			</div>
 
-			<div className='mt-4'>
-				<ul>
-					{menuItems.map((item, index) => (
-						<li key={index} className='border-b border-gray-200 py-2'>
-							<p className='font-semibold'>{item.cardname}</p>
-							<p className='text-red-500 font-semibold'>
-								{item.cardprice} so'm
-							</p>
-						</li>
-					))}
-				</ul>
-				{selectedCard && (
-					<div className='mt-4'>
-						<p className='font-semibold'>{selectedCard.cardname}</p>
-						<p className='text-red-500 font-semibold'>
-							{selectedOption === 'kg'
-								? selectedCard.secondprice
-								: selectedCard.cardprice}{' '}
-							so'm per {selectedOption}
-						</p>
-						<p className='text-red-500 font-semibold'>
-							Total Price: {calculateTotalPrice} so'm
-						</p>
-					</div>
+			<div id='menuContainer' className='mt-4 overflow-y-auto'>
+				{menuItems.length === 0 ? (
+					<p className='text-center text-red-500 font-bold text-[30px] h-full flex justify-center items-center mt-[60%]'>
+						¯\_(ツ)_/¯
+					</p>
+				) : (
+					<ul>
+						{menuItems.map((item, index) => (
+							<li key={index} className='border-b border-gray-200 py-2'>
+								<p className='font-semibold'>{item.cardname}</p>
+								<p className='text-red-500 font-semibold'>
+									{item.cardprice} so'm
+								</p>
+							</li>
+						))}
+					</ul>
 				)}
 			</div>
 		</motion.div>

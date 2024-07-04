@@ -111,6 +111,10 @@ function Outlet() {
 					setShowMenu={setShowMenu}
 					selectedCard={selectedCard}
 					menuItems={menuItems}
+					selectedOption={selectedOption}
+					calculateTotalPrice={calculateTotalPrice}
+					handleIncrement={handleIncrement}
+					handleDecrement={handleDecrement}
 				/>
 			)}
 		</div>
