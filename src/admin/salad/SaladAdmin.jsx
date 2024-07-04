@@ -9,7 +9,7 @@ function SaladAdmin({ tab }) {
 		cardname: '',
 		carddescreption: '',
 		cardpicture: '',
-		cardprice: 0,
+		cardprice: '',
 	})
 
 	const fetchSalad = async () => {
@@ -34,7 +34,7 @@ function SaladAdmin({ tab }) {
 			cardname: data.cardname || '',
 			carddescreption: data.carddescreption || '',
 			cardpicture: data.cardpicture || '',
-			cardprice: data.cardprice || 0,
+			cardprice: data.cardprice || '',
 		})
 		const modal = document.getElementById(`my_modal_${tab}`)
 		if (modal) modal.showModal()
@@ -92,7 +92,7 @@ function SaladAdmin({ tab }) {
 				cardname: '',
 				carddescreption: '',
 				cardpicture: '',
-				cardprice: 0,
+				cardprice: '',
 			})
 			handleCloseModal()
 			fetchSalad()

@@ -9,7 +9,9 @@ function SecondFood({ tab }) {
 		cardname: '',
 		carddescreption: '',
 		cardpicture: '',
-		cardprice: 0,
+		cardprice: '',
+		firstprice: '',
+		secondprice: '',
 	})
 
 	const fetchSecondFood = async () => {
@@ -34,7 +36,9 @@ function SecondFood({ tab }) {
 			cardname: data.cardname || '',
 			carddescreption: data.carddescreption || '',
 			cardpicture: data.cardpicture || '',
-			cardprice: data.cardprice || 0,
+			cardprice: data.cardprice || '',
+			secondprice: data.secondprice || '',
+			firstprice: data.firstprice || '',
 		})
 		const modal = document.getElementById(`my_modal_${tab}`)
 		if (modal) modal.showModal()
@@ -42,10 +46,17 @@ function SecondFood({ tab }) {
 
 	const handleSubmit = async e => {
 		e.preventDefault()
-		const { cardname, carddescreption, cardpicture, cardprice } = secondForm
+		const {
+			cardname,
+			carddescreption,
+			cardpicture,
+			cardprice,
+			secondprice,
+			firstprice,
+		} = secondForm
 
-		if (!cardname || !carddescreption || !cardpicture || !cardprice) {
-			console.error('Please provide all details for the form.')
+		if (!cardname || !carddescreption || !cardpicture) {
+			console.error('Please provide all required details for the form.')
 			return
 		}
 
@@ -57,7 +68,9 @@ function SecondFood({ tab }) {
 						cardname,
 						carddescreption,
 						cardpicture,
-						cardprice,
+						cardprice: cardprice || null,
+						secondprice: secondprice || null,
+						firstprice: firstprice || null,
 					})
 					.eq('id', secondFood[editIndex].id)
 
@@ -77,7 +90,9 @@ function SecondFood({ tab }) {
 						cardname,
 						carddescreption,
 						cardpicture,
-						cardprice,
+						cardprice: cardprice || null,
+						secondprice: secondprice || null,
+						firstprice: firstprice || null,
 					})
 					.single()
 
@@ -92,7 +107,9 @@ function SecondFood({ tab }) {
 				cardname: '',
 				carddescreption: '',
 				cardpicture: '',
-				cardprice: 0,
+				cardprice: '',
+				secondprice: '',
+				firstprice: '',
 			})
 			handleCloseModal()
 			fetchSecondFood()
@@ -103,7 +120,7 @@ function SecondFood({ tab }) {
 
 	const handleDelete = async (id, index) => {
 		try {
-			await supabase.from('secondfood').delete().eq('id', id)
+			const { error } = await supabase.from('secondfood').delete().eq('id', id)
 			if (error) {
 				console.error('Error deleting record:', error.message)
 				return
@@ -126,7 +143,7 @@ function SecondFood({ tab }) {
 		<>
 			<dialog id={`my_modal_${tab}`} className='modal font-Poppins'>
 				<div className='modal-box glass-effect'>
-					<h3 className='font-bold text-[25px] my-[20px] text-center text-black'>
+					<h3 className='font-bold text-[25px] my-[10px] text-center text-black'>
 						Ikkinchi Taom
 					</h3>
 					<form onSubmit={handleSubmit} className='flex flex-col gap-4'>
@@ -161,11 +178,32 @@ function SecondFood({ tab }) {
 							type='number'
 							name='cardprice'
 							placeholder='Narx'
-							className='input bg-[#17171A] text-white'
+							className='input bg-[#17171A] text-white w-full'
 							value={secondForm.cardprice}
 							onChange={handleChange}
-							required
 						/>
+						<h2 className='text-red-500'>
+							Faqatgina KG o'lchamli taomlar uchun!
+						</h2>
+						<div className='flex items-center gap-[10px]'>
+							<input
+								type='number'
+								name='firstprice'
+								placeholder='1 por'
+								className='input bg-[#17171A] text-white w-full'
+								value={secondForm.firstprice}
+								onChange={handleChange}
+							/>
+							|
+							<input
+								type='number'
+								name='secondprice'
+								placeholder='1 kg'
+								className='input bg-[#17171A] text-white w-full'
+								value={secondForm.secondprice}
+								onChange={handleChange}
+							/>
+						</div>
 
 						<button className='btn btn-success text-white'>
 							{editIndex !== null ? 'Yangilash' : 'Yuborish'}
@@ -195,6 +233,12 @@ function SecondFood({ tab }) {
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
 								Narx
 							</th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+								1 por narx
+							</th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
+								1 kg narx
+							</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -210,6 +254,8 @@ function SecondFood({ tab }) {
 									/>
 								</td>
 								<td className='px-6 py-4 text-sm'>{card.cardprice}</td>
+								<td className='px-6 py-4 text-sm'>{card.firstprice}</td>
+								<td className='px-6 py-4 text-sm'>{card.secondprice}</td>
 
 								<td className='px-6 py-4 text-sm'>
 									<div className='flex items-center gap-3'>
