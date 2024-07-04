@@ -7,10 +7,17 @@ import images from '../../ImportedPictures'
 import Wrapper from '../../layout/Wrapper'
 import supabase from '../../supabase/config'
 
-function FirstFoods() {
+function FirstFoods({
+	setSelectedCard,
+	selectedCard,
+	addToMenu,
+	handleIncrement,
+	handleDecrement,
+	calculateTotalPrice,
+	setQuantity,
+	quantity,
+}) {
 	const [firstfood, setFirstFoods] = useState([])
-	const [selectedCard, setSelectedCard] = useState(null)
-	const [quantity, setQuantity] = useState(1)
 	const swiperRef = useRef(null)
 
 	const fetchFirstFoods = async () => {
@@ -40,21 +47,6 @@ function FirstFoods() {
 	const handleCloseModal = () => {
 		const modal = document.getElementById('firstfood-modal')
 		if (modal) modal.close()
-		setSelectedCard(null)
-	}
-
-	const handleIncrement = () => {
-		setQuantity(prevQuantity => prevQuantity + 1)
-	}
-
-	const handleDecrement = () => {
-		if (quantity > 1) {
-			setQuantity(prevQuantity => prevQuantity - 1)
-		}
-	}
-
-	const calculateTotalPrice = () => {
-		return selectedCard ? selectedCard.cardprice * quantity : 0
 	}
 
 	return (
@@ -120,6 +112,7 @@ function FirstFoods() {
 											src={images.shoppingBag}
 											alt='bag'
 											className='w-[30px] cursor-pointer'
+											onClick={() => addToMenu(card)}
 										/>
 									</div>
 								</div>
@@ -138,7 +131,7 @@ function FirstFoods() {
 			</div>
 
 			<dialog id='firstfood-modal' className='modal font-Poppins'>
-				<div className='modal-box glass-effect'>
+				<div className='modal-box bg-[#fffffffe]'>
 					<img
 						src={images.close}
 						alt='close'
@@ -172,6 +165,7 @@ function FirstFoods() {
 									src={images.shoppingBag}
 									alt='bag'
 									className='w-[30px] cursor-pointer ml-[50px]'
+									onClick={() => addToMenu(selectedCard)}
 								/>
 							</div>
 						</>

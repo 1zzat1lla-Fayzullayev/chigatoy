@@ -7,10 +7,17 @@ import images from '../../ImportedPictures'
 import Wrapper from '../../layout/Wrapper'
 import supabase from '../../supabase/config'
 
-function Shashlik() {
+function Shashlik({
+	setSelectedCard,
+	selectedCard,
+	addToMenu,
+	handleIncrement,
+	handleDecrement,
+	calculateTotalPrice,
+	setQuantity,
+	quantity,
+}) {
 	const [shashlik, setShashlik] = useState([])
-	const [selectedCard, setSelectedCard] = useState(null)
-	const [quantity, setQuantity] = useState(1)
 	const swiperRef = useRef(null)
 
 	const fetchShashlik = async () => {
@@ -40,28 +47,13 @@ function Shashlik() {
 	const handleCloseModal = () => {
 		const modal = document.getElementById('shashlik-modal')
 		if (modal) modal.close()
-		setSelectedCard(null)
-	}
-
-	const handleIncrement = () => {
-		setQuantity(prevQuantity => prevQuantity + 1)
-	}
-
-	const handleDecrement = () => {
-		if (quantity > 1) {
-			setQuantity(prevQuantity => prevQuantity - 1)
-		}
-	}
-
-	const calculateTotalPrice = () => {
-		return selectedCard ? selectedCard.cardprice * quantity : 0
 	}
 
 	return (
 		<Wrapper>
 			<div className='font-Poppins mt-10 mx-4 xl:mx-0'>
 				<h2 className='text-3xl font-semibold mb-4 text-center xl:text-left'>
-					Shashlik
+					Birinchi taom
 				</h2>
 				<Swiper
 					modules={[Autoplay]}
@@ -120,6 +112,7 @@ function Shashlik() {
 											src={images.shoppingBag}
 											alt='bag'
 											className='w-[30px] cursor-pointer'
+											onClick={() => addToMenu(card)}
 										/>
 									</div>
 								</div>
@@ -138,7 +131,7 @@ function Shashlik() {
 			</div>
 
 			<dialog id='shashlik-modal' className='modal font-Poppins'>
-				<div className='modal-box glass-effect'>
+				<div className='modal-box bg-[#fffffffe]'>
 					<img
 						src={images.close}
 						alt='close'
@@ -172,6 +165,7 @@ function Shashlik() {
 									src={images.shoppingBag}
 									alt='bag'
 									className='w-[30px] cursor-pointer ml-[50px]'
+									onClick={() => addToMenu(selectedCard)}
 								/>
 							</div>
 						</>

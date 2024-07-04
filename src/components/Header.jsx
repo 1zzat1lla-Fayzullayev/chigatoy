@@ -6,7 +6,7 @@ import Wrapper from '../layout/Wrapper'
 import MobileHeader from '../shared/header/MobileHeader'
 import Menu from '../shared/Menu'
 
-function Header() {
+function Header({ selectedCard, menuItems }) {
 	const [showMobileHeader, setShowMobileHeader] = useState(false)
 	const [showMenu, setShowMenu] = useState(false)
 
@@ -46,7 +46,13 @@ function Header() {
 			</header>
 
 			{showMobileHeader && <MobileHeader openNavbar={handleOpenNavbar} />}
-			<Menu showMenu={showMenu} openMenu={handleShowMenu} setShowMenu={setShowMenu}/>
+			<Menu
+				showMenu={showMenu}
+				openMenu={handleShowMenu}
+				setShowMenu={setShowMenu}
+				selectedCard={selectedCard}
+				menuItems={menuItems}
+			/>
 		</>
 	)
 }

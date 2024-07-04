@@ -1,25 +1,32 @@
-import { motion } from 'framer-motion'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Autoplay } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper-bundle.css'
 import images from '../../ImportedPictures'
 import Wrapper from '../../layout/Wrapper'
 import supabase from '../../supabase/config'
+import { motion } from 'framer-motion'
 
-function Salats() {
-	const [salat, setSalat] = useState([])
-	const [selectedCard, setSelectedCard] = useState(null)
-	const [quantity, setQuantity] = useState(1)
+function Salats({
+	setSelectedCard,
+	selectedCard,
+	addToMenu,
+	handleIncrement,
+	handleDecrement,
+	calculateTotalPrice,
+	setQuantity,
+	quantity,
+}) {
+	const [salats, setSalats] = useState([])
 	const swiperRef = useRef(null)
 
-	const fetchSalat = async () => {
+	const fetchSalats = async () => {
 		try {
 			const { data, error } = await supabase.from('salat').select('*')
 			if (error) {
 				throw error
 			} else {
-				setSalat(data)
+				setSalats(data)
 			}
 		} catch (error) {
 			console.error('Error fetching data:', error.message)
@@ -27,41 +34,26 @@ function Salats() {
 	}
 
 	useEffect(() => {
-		fetchSalat()
+		fetchSalats()
 	}, [])
 
 	const handleCardClick = card => {
 		setSelectedCard(card)
-		setQuantity(1) // Reset quantity to 1 when a new card is selected
-		const modal = document.getElementById('card-modal')
+		setQuantity(1)
+		const modal = document.getElementById('salats-modal')
 		if (modal) modal.showModal()
 	}
 
 	const handleCloseModal = () => {
-		const modal = document.getElementById('card-modal')
+		const modal = document.getElementById('salats-modal')
 		if (modal) modal.close()
-		setSelectedCard(null)
-	}
-
-	const handleIncrement = () => {
-		setQuantity(prevQuantity => prevQuantity + 1)
-	}
-
-	const handleDecrement = () => {
-		if (quantity > 1) {
-			setQuantity(prevQuantity => prevQuantity - 1)
-		}
-	}
-
-	const calculateTotalPrice = () => {
-		return selectedCard ? selectedCard.cardprice * quantity : 0
 	}
 
 	return (
 		<Wrapper>
 			<div className='font-Poppins mt-10 mx-4 xl:mx-0'>
 				<h2 className='text-3xl font-semibold mb-4 text-center xl:text-left'>
-					Salatlar
+					Salat
 				</h2>
 				<Swiper
 					modules={[Autoplay]}
@@ -96,7 +88,7 @@ function Salats() {
 					}}
 					onSwiper={swiper => (swiperRef.current = swiper)}
 				>
-					{salat.map((card, index) => (
+					{salats.map((card, index) => (
 						<SwiperSlide key={index}>
 							<div
 								className='relative h-[280px] w-[250px] mx-auto rounded-lg border border-gray-200 overflow-hidden'
@@ -120,6 +112,7 @@ function Salats() {
 											src={images.shoppingBag}
 											alt='bag'
 											className='w-[30px] cursor-pointer'
+											onClick={() => addToMenu(card)}
 										/>
 									</div>
 								</div>
@@ -137,8 +130,8 @@ function Salats() {
 				</Swiper>
 			</div>
 
-			<dialog id='card-modal' className='modal font-Poppins'>
-				<div className='modal-box glass-effect'>
+			<dialog id='salats-modal' className='modal font-Poppins'>
+				<div className='modal-box bg-[#fffffffe]'>
 					<img
 						src={images.close}
 						alt='close'
@@ -160,22 +153,23 @@ function Salats() {
 							<p className='text-lg font-bold text-red-500 mt-4'>
 								{calculateTotalPrice()} so'm
 							</p>
+							<div className='flex items-center gap-[10px]'>
+								<button className='text-[35px]' onClick={handleDecrement}>
+									-
+								</button>
+								<span className='text-[35px]'>{quantity}</span>
+								<button className='text-[35px]' onClick={handleIncrement}>
+									+
+								</button>
+								<img
+									src={images.shoppingBag}
+									alt='bag'
+									className='w-[30px] cursor-pointer ml-[50px]'
+									onClick={() => addToMenu(selectedCard)}
+								/>
+							</div>
 						</>
 					)}
-					<div className='flex items-center gap-[10px]'>
-						<button className='text-[35px]' onClick={handleDecrement}>
-							-
-						</button>
-						<span className='text-[35px]'>{quantity}</span>
-						<button className='text-[35px]' onClick={handleIncrement}>
-							+
-						</button>
-						<img
-							src={images.shoppingBag}
-							alt='bag'
-							className='w-[30px] cursor-pointer ml-[50px]'
-						/>
-					</div>
 				</div>
 			</dialog>
 		</Wrapper>
