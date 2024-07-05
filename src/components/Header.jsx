@@ -20,7 +20,7 @@ function Header({ selectedCard, menuItems }) {
 
 	return (
 		<>
-			<header className='glass-effect py-[5px] px-[5px] rounded-[5px] fixed w-full z-[100]'>
+			<header className='glass-effect py-[5px] px-[5px] rounded-[5px] fixed w-full z-[100] select-none'>
 				<Wrapper>
 					<div className='flex justify-between items-center px-[10px] md:px-0'>
 						<Logo />

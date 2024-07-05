@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 function MarqueeFood() {
 	return (
 		<>
-			<div className='mt-[100px]'>
+			<div className='mt-[100px] select-none'>
 				<Wrapper>
 					<Marquee
 						direction='left'

@@ -1,25 +1,20 @@
-import { motion } from 'framer-motion'
 import React, { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import { Autoplay } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper-bundle.css'
 import images from '../../ImportedPictures'
 import Wrapper from '../../layout/Wrapper'
 import supabase from '../../supabase/config'
-import Menu from '../../shared/Menu'
+import { useQuantity } from '../../context/useQuantity'
+import SecondFoodModal from '../../shared/foodsModal/SecondFoodModal'
 
-function SecondFoods({
-	setSelectedCard,
-	selectedCard,
-	addToMenu,
-	handleIncrement,
-	handleDecrement,
-	setQuantity,
-	quantity,
-}) {
+function SecondFoods({ setSelectedCard, selectedCard, addToMenu }) {
 	const [secondFood, setSecondFood] = useState([])
 	const [selectedOption, setSelectedOption] = useState('por')
 	const swiperRef = useRef(null)
+
+	const { quantity, increment, decrement, setQuantity } = useQuantity(1)
 
 	useEffect(() => {
 		fetchSecondFood()
@@ -57,20 +52,18 @@ function SecondFoods({
 
 	const calculateTotalPrice = () => {
 		if (!selectedCard) return '0'
-
 		let pricePerUnit = parseFloat(
 			selectedOption === 'kg' && selectedCard.secondprice !== null
 				? selectedCard.secondprice
 				: selectedCard.cardprice
 		)
 		let totalPrice = pricePerUnit * quantity
-
 		return totalPrice % 1 === 0 ? totalPrice.toFixed(0) : totalPrice.toFixed(2)
 	}
 
 	return (
 		<Wrapper>
-			<div className='font-Poppins mt-10 mx-4 xl:mx-0'>
+			<div className='font-Poppins mt-10 mx-4 xl:mx-0 select-none'>
 				<h2 className='text-3xl font-semibold mb-4 text-center xl:text-left'>
 					Ikkinchi taom
 				</h2>
@@ -114,14 +107,14 @@ function SecondFoods({
 									whileHover={{ scale: 1.07 }}
 									src={card.cardpicture}
 									alt={card.cardname}
-									className='w-full h-[60%] object-cover rounded-t-lg cursor-pointer'
+									className='w-full h-[50%] object-cover rounded-t-lg cursor-pointer'
 									onClick={() => handleCardClick(card)}
 								/>
-								<div className='p-6'>
+								<div className='p-4'>
 									<h3 className='text-[17px] font-semibold mb-2'>
 										{card.cardname}
 									</h3>
-									<div className='flex items-center justify-between mt-4'>
+									<div className='flex items-center justify-between absolute bottom-0 w-[88%] pb-[10px]'>
 										<p className='text-lg font-bold text-red-500'>
 											{card.cardprice} so'm
 										</p>
@@ -146,82 +139,16 @@ function SecondFoods({
 					></div>
 				</Swiper>
 			</div>
-
-			<dialog id='secondfood-modal' className='modal font-Poppins'>
-				<div className='modal-box bg-[#fffffffe]'>
-					<img
-						src={images.close}
-						alt='close'
-						className='w-[30px] absolute right-0 top-0 cursor-pointer'
-						onClick={handleCloseModal}
-					/>
-
-					{selectedCard && (
-						<>
-							<img
-								src={selectedCard.cardpicture}
-								alt={selectedCard.cardname}
-								className='w-full h-[200px] object-cover rounded-t-lg'
-							/>
-							<h4 className='text-lg font-semibold mt-4'>
-								{selectedCard.cardname}
-							</h4>
-							<p className='text-sm mt-2'>{selectedCard.carddescreption}</p>
-							{selectedCard.firstprice !== null &&
-								selectedCard.secondprice !== null && (
-									<div className='flex flex-col'>
-										<div className='flex gap-2'>
-											<input
-												type='radio'
-												name='option'
-												id='por'
-												checked={selectedOption === 'por'}
-												onChange={() => handleOptionChange('por')}
-											/>
-											<label htmlFor='por'>1 por</label>
-										</div>
-										<div className='flex gap-2'>
-											<input
-												type='radio'
-												name='option'
-												id='kg'
-												checked={selectedOption === 'kg'}
-												onChange={() => handleOptionChange('kg')}
-											/>
-											<label htmlFor='kg'>1 kg</label>
-										</div>
-									</div>
-								)}
-							<p className='text-lg font-bold text-red-500 mt-4'>
-								{calculateTotalPrice()} so'm
-							</p>
-							<div className='flex items-center gap-[10px]'>
-								<button className='text-[35px]' onClick={handleDecrement}>
-									-
-								</button>
-								<span className='text-[35px]'>{quantity}</span>
-								<button className='text-[35px]' onClick={handleIncrement}>
-									+
-								</button>
-								<img
-									src={images.shoppingBag}
-									alt='bag'
-									className='w-[30px] cursor-pointer ml-[50px]'
-									onClick={() => addToMenu(selectedCard)}
-								/>
-							</div>
-						</>
-					)}
-				</div>
-			</dialog>
-			<Menu
-				showMenu={false} // Set to true to display the menu
-				openMenu={() => {}} // Implement openMenu if needed
-				setShowMenu={() => {}} // Implement setShowMenu if needed
+			<SecondFoodModal
+				addToMenu={addToMenu}
+				decrement={decrement}
+				handleCloseModal={handleCloseModal}
+				increment={increment}
+				quantity={quantity}
 				selectedCard={selectedCard}
-				menuItems={secondFood} // Adjust to pass relevant menu items
-				selectedOption={selectedOption} // Pass selectedOption
-				calculateTotalPrice={calculateTotalPrice()} // Pass calculated price
+				calculateTotalPrice={calculateTotalPrice}
+				selectedOption={selectedOption}
+				handleOptionChange={handleOptionChange}
 			/>
 		</Wrapper>
 	)

@@ -6,16 +6,17 @@ import 'swiper/swiper-bundle.css'
 import images from '../../ImportedPictures'
 import Wrapper from '../../layout/Wrapper'
 import supabase from '../../supabase/config'
+import ShashlikModal from '../../shared/foodsModal/ShashlikModal'
 
 function Shashlik({
 	setSelectedCard,
 	selectedCard,
 	addToMenu,
-	handleIncrement,
-	handleDecrement,
 	calculateTotalPrice,
-	setQuantity,
+	increment,
+	decrement,
 	quantity,
+	setQuantity,
 }) {
 	const [shashlik, setShashlik] = useState([])
 	const swiperRef = useRef(null)
@@ -51,9 +52,9 @@ function Shashlik({
 
 	return (
 		<Wrapper>
-			<div className='font-Poppins mt-10 mx-4 xl:mx-0'>
+			<div className='font-Poppins mt-10 mx-4 xl:mx-0 select-none pb-[100px]'>
 				<h2 className='text-3xl font-semibold mb-4 text-center xl:text-left'>
-					Birinchi taom
+					Shashlik
 				</h2>
 				<Swiper
 					modules={[Autoplay]}
@@ -95,14 +96,14 @@ function Shashlik({
 									whileHover={{ scale: 1.07 }}
 									src={card.cardpicture}
 									alt={card.cardname}
-									className='w-full h-[60%] object-cover rounded-t-lg cursor-pointer'
+									className='w-full h-[50%] object-cover rounded-t-lg cursor-pointer'
 									onClick={() => handleCardClick(card)}
 								/>
-								<div className='p-6'>
+								<div className='p-4'>
 									<h3 className='text-[17px] font-semibold mb-2'>
 										{card.cardname}
 									</h3>
-									<div className='flex items-center justify-between mt-4'>
+									<div className='flex items-center justify-between absolute bottom-0 w-[88%] pb-[10px]'>
 										<p className='text-lg font-bold text-red-500'>
 											{card.cardprice} so'm
 										</p>
@@ -128,48 +129,15 @@ function Shashlik({
 				</Swiper>
 			</div>
 
-			<dialog id='shashlik-modal' className='modal font-Poppins'>
-				<div className='modal-box bg-[#fffffffe]'>
-					<img
-						src={images.close}
-						alt='close'
-						className='w-[30px] absolute right-0 top-0 cursor-pointer'
-						onClick={handleCloseModal}
-					/>
-
-					{selectedCard && (
-						<>
-							<img
-								src={selectedCard.cardpicture}
-								alt={selectedCard.cardname}
-								className='w-full h-[200px] object-cover rounded-t-lg'
-							/>
-							<h4 className='text-lg font-semibold mt-4'>
-								{selectedCard.cardname}
-							</h4>
-							<p className='text-sm mt-2'>{selectedCard.carddescreption}</p>
-							<p className='text-lg font-bold text-red-500 mt-4'>
-								{calculateTotalPrice()} so'm
-							</p>
-							<div className='flex items-center gap-[10px]'>
-								<button className='text-[35px]' onClick={handleDecrement}>
-									-
-								</button>
-								<span className='text-[35px]'>{quantity}</span>
-								<button className='text-[35px]' onClick={handleIncrement}>
-									+
-								</button>
-								<img
-									src={images.shoppingBag}
-									alt='bag'
-									className='w-[30px] cursor-pointer ml-[50px]'
-									onClick={() => addToMenu(selectedCard)}
-								/>
-							</div>
-						</>
-					)}
-				</div>
-			</dialog>
+			<ShashlikModal
+				addToMenu={addToMenu}
+				decrement={decrement}
+				handleCloseModal={handleCloseModal}
+				increment={increment}
+				quantity={quantity}
+				selectedCard={selectedCard}
+				calculateTotalPrice={calculateTotalPrice}
+			/>
 		</Wrapper>
 	)
 }

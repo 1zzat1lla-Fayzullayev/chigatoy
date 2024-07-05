@@ -16,7 +16,7 @@ function Menu({
 		setShowMenu(false)
 	}
 
-	console.log(calculateTotalPrice)
+	console.log(handleClear, 'aaaa')
 
 	useEffect(() => {
 		const menuContainer = document.getElementById('menuContainer')
@@ -30,7 +30,7 @@ function Menu({
 			initial={{ x: '100%' }}
 			animate={{ x: showMenu ? '0%' : '100%' }}
 			transition={{ type: 'spring', stiffness: 100, damping: 15 }}
-			className='glass-effect w-[250px] md:w-[350px] h-screen fixed right-0 rounded-l-[10px] shadow-lg border-l-[2px] border-t-[2px] border-[#8d000e56] z-[999] font-Poppins'
+			className='glass-effect w-[250px] md:w-[350px] h-screen fixed right-0 rounded-l-[10px] shadow-lg border-l-[2px] border-t-[2px] border-[#8d000e56] z-[999] font-Poppins overflow-y-auto select-none'
 		>
 			<div className='flex justify-between items-center'>
 				<div className='cursor-pointer'>
@@ -58,7 +58,7 @@ function Menu({
 							<li key={index} className='border-b border-gray-200 py-2'>
 								<p className='font-semibold'>{item.cardname}</p>
 								<p className='text-red-500 font-semibold'>
-									{calculateTotalPrice} so'm
+									{calculateTotalPrice} so'm 
 								</p>
 
 								<div className='flex items-center gap-[10px]'>

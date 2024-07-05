@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import FirstFoods from '../components/foods/FirstFoods'
 import Salats from '../components/foods/Salats'
 import SecondFoods from '../components/foods/SecondFoods'
@@ -7,11 +7,19 @@ import Main from '../components/Main'
 import MarqueeFood from '../components/MarqueeFood'
 import Shashlik from '../components/foods/Shashlik'
 import Menu from '../shared/Menu'
+import { useLocalStorage } from '../context/useLocalStorage'
+import { useQuantity } from '../context/useQuantity'
 
 function Outlet() {
-	const [selectedCard, setSelectedCard] = useState(null)
-	const [menuItems, setMenuItems] = useState([])
-	const [quantity, setQuantity] = useState(1)
+	const [selectedCard, setSelectedCard] = useLocalStorage(
+		'selectedCard',
+		null
+	)
+	const [menuItems, setMenuItems, clearMenuItems] = useLocalStorage(
+		'menuItems',
+		[]
+	)
+	const { quantity, increment, decrement, setQuantity } = useQuantity(1)
 	const [showMenu, setShowMenu] = useState(false)
 
 	const addToMenu = card => {
@@ -21,112 +29,27 @@ function Outlet() {
 	}
 
 	const handleClear = () => {
-		localStorage.removeItem('menuItems')
-		setMenuItems([])
-	}
-
-	useEffect(() => {
-		const savedCard = localStorage.getItem('selectedCard')
-		const savedItems = localStorage.getItem('menuItems')
-		if (savedCard) {
-			setSelectedCard(JSON.parse(savedCard))
-		}
-		if (savedItems) {
-			setMenuItems(JSON.parse(savedItems))
-		}
-	}, [])
-
-	useEffect(() => {
-		if (selectedCard) {
-			localStorage.setItem('selectedCard', JSON.stringify(selectedCard))
-		} else {
-			localStorage.removeItem('selectedCard')
-		}
-	}, [selectedCard])
-
-	useEffect(() => {
-		localStorage.setItem('menuItems', JSON.stringify(menuItems))
-	}, [menuItems])
-
-	const handleIncrement = () => {
-		setQuantity(prevQuantity => prevQuantity + 1)
-	}
-
-	const handleDecrement = () => {
-		if (quantity > 1) {
-			setQuantity(prevQuantity => prevQuantity - 1)
-		}
+		clearMenuItems()
+    	console.log('aa')
 	}
 
 	const calculateTotalPrice = () => {
-		return selectedCard ? selectedCard.cardprice * quantity : 0
-	}
-
-	const openMenu = () => {
-		setShowMenu(true)
+		if (!selectedCard) return '0'
+		return (selectedCard.cardprice * quantity).toFixed(2)
 	}
 
 	return (
 		<div className='absolute top-0 -z-10 h-full w-full bg-white'>
 			<div className='absolute bottom-auto left-auto right-0 top-0 h-[500px] w-[500px] -translate-x-[30%] translate-y-[20%] rounded-full bg-[rgba(173,109,244,0.5)] opacity-50 blur-[80px]'></div>
-			<Header
-				selectedCard={selectedCard}
-				setSelectedCard={setSelectedCard}
-				menuItems={menuItems}
-			/>
-			<Main />
+			<Header selectedCard={selectedCard} setSelectedCard={setSelectedCard} menuItems={menuItems}
+			/> <Main />
 			<MarqueeFood />
-			<Salats
-				setSelectedCard={setSelectedCard}
-				selectedCard={selectedCard}
-				addToMenu={addToMenu}
-				handleIncrement={handleIncrement}
-				handleDecrement={handleDecrement}
-				calculateTotalPrice={calculateTotalPrice}
-				setQuantity={setQuantity}
-				quantity={quantity}
-			/>
-			<FirstFoods
-				setSelectedCard={setSelectedCard}
-				selectedCard={selectedCard}
-				addToMenu={addToMenu}
-				handleIncrement={handleIncrement}
-				handleDecrement={handleDecrement}
-				calculateTotalPrice={calculateTotalPrice}
-				setQuantity={setQuantity}
-				quantity={quantity}
-			/>
-			<SecondFoods
-				setSelectedCard={setSelectedCard}
-				selectedCard={selectedCard}
-				addToMenu={addToMenu}
-				handleIncrement={handleIncrement}
-				handleDecrement={handleDecrement}
-				setQuantity={setQuantity}
-				quantity={quantity}
-			/>
-			<Shashlik
-				setSelectedCard={setSelectedCard}
-				selectedCard={selectedCard}
-				addToMenu={addToMenu}
-				handleIncrement={handleIncrement}
-				handleDecrement={handleDecrement}
-				calculateTotalPrice={calculateTotalPrice}
-				setQuantity={setQuantity}
-				quantity={quantity}
-			/>
+			<Salats setSelectedCard={setSelectedCard} selectedCard={selectedCard} addToMenu={addToMenu} increment={increment} decrement={decrement} calculateTotalPrice={calculateTotalPrice} setQuantity={setQuantity} quantity={quantity} />
+			<FirstFoods setSelectedCard={setSelectedCard} selectedCard={selectedCard} addToMenu={addToMenu} increment={increment} decrement={decrement} calculateTotalPrice={calculateTotalPrice} setQuantity={setQuantity} quantity={quantity} />
+			<SecondFoods setSelectedCard={setSelectedCard} selectedCard={selectedCard} addToMenu={addToMenu} increment={increment} decrement={decrement} setQuantity={setQuantity} quantity={quantity} />
+			<Shashlik setSelectedCard={setSelectedCard} selectedCard={selectedCard} addToMenu={addToMenu} increment={increment} decrement={decrement} calculateTotalPrice={calculateTotalPrice} setQuantity={setQuantity} quantity={quantity} />
 			{showMenu && (
-				<Menu
-					showMenu={showMenu}
-					openMenu={openMenu}
-					setShowMenu={setShowMenu}
-					selectedCard={selectedCard}
-					menuItems={menuItems}
-					calculateTotalPrice={calculateTotalPrice}
-					handleIncrement={handleIncrement}
-					handleDecrement={handleDecrement}
-					handleClear={handleClear}
-				/>
+			<Menu showMenu={showMenu} setShowMenu={setShowMenu} menuItems={menuItems} handleClear={handleClear} handleDecrement={decrement} handleIncrement={increment} calculateTotalPrice={calculateTotalPrice} />
 			)}
 		</div>
 	)

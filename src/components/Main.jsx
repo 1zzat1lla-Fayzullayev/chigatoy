@@ -6,7 +6,7 @@ function Main() {
 	return (
 		<>
 			<Wrapper>
-				<div className='mt-[150px] flex justify-center items-center lg:gap-[150px] flex-col md:flex-row'>
+				<div className='mt-[150px] flex justify-center items-center lg:gap-[150px] flex-col md:flex-row select-none'>
 					<div className='px-[20px] lg:px-0 max-w-[400px] w-full flex flex-col gap-[30px] font-Poppins'>
 						<h1 className='text-[20px] md:text-[30px] lg:text-[40px] leading-[1.2] font-bold text-[#8c000e]'>
 							Eng Mazali Milliy Taomlarga Xush Kelibsiz!
