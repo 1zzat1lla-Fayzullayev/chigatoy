@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import images from '../ImportedPictures'
 
@@ -6,17 +6,12 @@ function Menu({
 	showMenu,
 	setShowMenu,
 	menuItems,
+	updateMenuItem,
 	handleClear,
-	handleDecrement,
-	handleIncrement,
-	quantity,
-	calculateTotalPrice,
 }) {
 	const handleCloseMenu = () => {
 		setShowMenu(false)
 	}
-
-	console.log(handleClear, 'aaaa')
 
 	useEffect(() => {
 		const menuContainer = document.getElementById('menuContainer')
@@ -24,6 +19,26 @@ function Menu({
 			menuContainer.scrollTop = menuContainer.scrollHeight
 		}
 	}, [menuItems])
+
+	const handleIncrement = index => {
+		if (typeof updateMenuItem === 'function') {
+			updateMenuItem(index, 1)
+		} else {
+			console.error('updateMenuItem is not a function', updateMenuItem)
+		}
+	}
+
+	const handleDecrement = index => {
+		if (typeof updateMenuItem === 'function') {
+			updateMenuItem(index, -1)
+		} else {
+			console.error('updateMenuItem is not a function', updateMenuItem)
+		}
+	}
+
+	const calculateItemTotal = item => {
+		return ((item.cardprice || 0) * (item.quantity || 1)).toFixed(2)
+	}
 
 	return (
 		<motion.div
@@ -41,7 +56,6 @@ function Menu({
 						onClick={handleCloseMenu}
 					/>
 				</div>
-
 				<p className='cursor-pointer text-yellow-500' onClick={handleClear}>
 					Tozalash
 				</p>
@@ -58,15 +72,20 @@ function Menu({
 							<li key={index} className='border-b border-gray-200 py-2'>
 								<p className='font-semibold'>{item.cardname}</p>
 								<p className='text-red-500 font-semibold'>
-									{calculateTotalPrice} so'm 
+									{calculateItemTotal(item)} so'm
 								</p>
-
 								<div className='flex items-center gap-[10px]'>
-									<button className='text-[35px]' onClick={handleDecrement}>
+									<button
+										className='text-[35px]'
+										onClick={() => handleDecrement(index)}
+									>
 										-
 									</button>
-									<span className='text-[35px]'>{quantity}</span>
-									<button className='text-[35px]' onClick={handleIncrement}>
+									<span className='text-[35px]'>{item.quantity || 1}</span>
+									<button
+										className='text-[35px]'
+										onClick={() => handleIncrement(index)}
+									>
 										+
 									</button>
 								</div>
